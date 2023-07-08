@@ -1,3 +1,8 @@
+import Model.User;
+import Services.DataBuilderService;
+import Services.DataReaderService;
+import Services.DataStoreService;
+
 import java.util.Scanner;
 
 public class Main {
@@ -7,9 +12,10 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
 
-        String username, password, question, answer, loggedInUser;
+        String username, password, question, answer, loggedInUser = null;
         User user;
-        UserAuthentication auth = new UserAuthentication(new DataStoreService());
+        UserAuthentication auth = new UserAuthentication(new DataStoreService(), new DataBuilderService(), new DataReaderService());
+        UserDatabaseBuilder databaseBuilder = new UserDatabaseBuilder(new DataStoreService(), new DataBuilderService(), new DataReaderService());
 
         while (true && !isUserLoggedIn) {
             System.out.println("Select the operation:");
@@ -43,9 +49,9 @@ public class Main {
                     answer = scanner.nextLine();
                     user = new User(username, password, question, answer);
                     if(auth.registerUser(user)) {
-                        System.out.println("User registered successfully.");
+                        System.out.println("Model.User registered successfully.");
                     } else {
-                        System.out.println("User with username already exists");
+                        System.out.println("Model.User with username already exists");
                     }
                     break;
                 case "3":
@@ -65,6 +71,14 @@ public class Main {
             String option = scanner.nextLine();
             switch (option) {
                 case "1":
+                    System.out.println("Enter the database name to create");
+                    String dbName = scanner.nextLine();
+                    boolean isCreated = databaseBuilder.createDatabase(loggedInUser, dbName);
+                    if(isCreated) {
+                        System.out.println("Successfully created database");
+                    } else {
+                        System.out.println("Each user is limited to one database only");
+                    }
                     break;
                 default:
                     System.out.println("Select a valid option");
