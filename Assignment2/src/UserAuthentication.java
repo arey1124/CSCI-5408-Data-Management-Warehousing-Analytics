@@ -33,7 +33,7 @@ public class UserAuthentication {
 
     public boolean authenticateUser (String userName, String password) {
         String userData = dataReaderService.getUserData(FILE_PATH, userName);
-        if(!userData.isEmpty() && userData != null) {
+        if(userData != null && !userData.isEmpty()) {
             String hashedPassword = hashPassword(password);
             String userPassword = dataReaderService.extractValue(userData, PASSWORD_IDENTIFIER);
             if(hashedPassword.equals(userPassword)) {

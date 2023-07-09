@@ -1,9 +1,6 @@
 package Services;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,7 +35,7 @@ public class QueryService {
         } else if (query.startsWith(INSERT_PATTERN)) {
             return executeInsert(dbPath, query);
         } else if (query.startsWith(UPDATE_PATTERN)) {
-            executeUpdate();
+            return executeUpdate(dbPath, query);
         } else if (query.startsWith(DELETE_PATTERN)) {
             executeDelete();
         } else {
@@ -66,13 +63,18 @@ public class QueryService {
     }
 
     private boolean executeSelect(String dbPath, String query) {
+        String tableName = parseTableName(query);
+        if(tableName == null || tableName.isEmpty()) {
+            System.out.println("Table does not exists");
+            return false;
+        }
 
-
+        List<List<String>> data = dataReaderService.getTableRecordsFromQuery(dbPath, tableName, query);
+        printTable(data);
         return false;
     }
 
     private boolean executeInsert(String dbPath, String query) {
-        System.out.println("Inside insert");
         String tableName = parseTableName(query);
         File file = new File(dbPath + "/" + tableName + ".txt");
         if(!file.exists()) {
@@ -88,8 +90,32 @@ public class QueryService {
         return false;
     }
 
-    private boolean executeUpdate() {
-        return false;
+    private boolean executeUpdate(String dbPath, String query) {
+        String tableName = parseTableName(query);
+        File file = new File(dbPath + "/" + tableName + ".txt");
+        if(!file.exists()) {
+            System.out.println("File not exists");
+            return false;
+        }
+        // Define the regular expression pattern
+        String patternString = "UPDATE\\s+(\\w+)\\s+SET\\s+(\\w+)\\s+=\\s+('[^']*'|\\d+).*WHERE\\s+(\\w+)\\s+=\\s+(\\d+)";
+        Pattern pattern = Pattern.compile(patternString);
+
+        // Match the pattern against the query
+        Matcher matcher = pattern.matcher(query);
+
+        if (matcher.matches()) {
+            // Extract the relevant data
+            String columnName = matcher.group(2);
+            String newValue = matcher.group(3);
+            String conditionColumn = matcher.group(4);
+            String conditionValue = matcher.group(5);
+            dataStoreService.updateTableData(file, columnName, newValue, conditionColumn, conditionValue);
+        } else {
+            System.out.println("Invalid update query format.");
+            return false;
+        }
+        return true;
     }
 
     private boolean executeDelete() {
@@ -227,5 +253,83 @@ public class QueryService {
             return userName + "." + database;
         }
         return null;
+    }
+
+    private static void printTable(List<List<String>> data) {
+        if (data.isEmpty()) {
+            System.out.println("No data available.");
+            return;
+        }
+
+        int numColumns = data.get(0).size();
+        int[] columnWidths = new int[numColumns];
+
+        // Find the maximum width for each column
+        for (List<String> row : data) {
+            for (int i = 0; i < numColumns; i++) {
+                int length = row.get(i).length();
+                if (length > columnWidths[i]) {
+                    columnWidths[i] = length;
+                }
+            }
+        }
+
+        // Print the top border
+        printBorder(columnWidths);
+
+        // Print the header row
+        printRow(data.get(0), columnWidths);
+
+        // Print the header-row separator
+        printSeparator(columnWidths);
+
+        // Print the data rows
+        for (int rowIndex = 1; rowIndex < data.size(); rowIndex++) {
+            printRow(data.get(rowIndex), columnWidths);
+        }
+
+        // Print the bottom border
+        printBorder(columnWidths);
+    }
+
+    private static void printBorder(int[] columnWidths) {
+        System.out.print("┌");
+        for (int width : columnWidths) {
+            System.out.print(repeatChar('─', width + 2));
+            System.out.print("┬");
+        }
+        System.out.println();
+    }
+
+    private static void printRow(List<String> row, int[] columnWidths) {
+        System.out.print("│");
+        for (int i = 0; i < row.size(); i++) {
+            String value = row.get(i);
+            int width = columnWidths[i];
+            System.out.print(" " + padString(value, width) + " ");
+            System.out.print("│");
+        }
+        System.out.println();
+    }
+
+    private static void printSeparator(int[] columnWidths) {
+        System.out.print("├");
+        for (int width : columnWidths) {
+            System.out.print(repeatChar('─', width + 2));
+            System.out.print("┼");
+        }
+        System.out.println();
+    }
+
+    private static String repeatChar(char c, int count) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            sb.append(c);
+        }
+        return sb.toString();
+    }
+
+    private static String padString(String str, int length) {
+        return String.format("%-" + length + "s", str);
     }
 }

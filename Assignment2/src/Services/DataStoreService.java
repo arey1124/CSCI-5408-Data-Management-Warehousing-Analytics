@@ -1,6 +1,8 @@
 package Services;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -74,5 +76,50 @@ public class DataStoreService {
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
         bufferedWriter.write("\n" + String.join("@@", data));
         bufferedWriter.close();
+    }
+
+    public void updateTableData(File file, String colToUpdate,
+                                String updatedValue, String conditionCol, String conditionValue) {
+        try {
+            List<String> columns = new ArrayList<>();
+            // Read the data from the file
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String header = reader.readLine(); // Skip the header line
+            columns = Arrays.asList(header.split("@@"));
+
+            String line;
+            StringBuilder updatedData = new StringBuilder();
+            boolean recordUpdated = false;
+
+            // Process each line in the file
+            while ((line = reader.readLine()) != null) {
+                String[] values = line.split("@@");
+                String valOfConditionalCol = values[columns.indexOf(conditionCol)];
+                if (valOfConditionalCol.equals(conditionValue)) {
+                    // Update the customer ID
+                    values[columns.indexOf(colToUpdate)] = updatedValue;
+                    recordUpdated = true;
+                }
+
+                // Append the updated line to the StringBuilder
+                updatedData.append(String.join("@@", values)).append("\n");
+            }
+
+            reader.close();
+
+            if (recordUpdated) {
+                // Write the updated data back to the file
+                BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                writer.write(header + "\n"); // Write the header line
+                writer.write(updatedData.toString()); // Write the updated data lines
+                writer.close();
+
+                System.out.println("Update successful.");
+            } else {
+                System.out.println("No record found with the specified condition.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
