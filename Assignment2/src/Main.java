@@ -2,6 +2,7 @@ import Model.User;
 import Services.DataBuilderService;
 import Services.DataReaderService;
 import Services.DataStoreService;
+import Services.QueryService;
 
 import java.util.Scanner;
 
@@ -79,6 +80,20 @@ public class Main {
                     } else {
                         System.out.println("Each user is limited to one database only");
                     }
+                    break;
+                case "2":
+                    System.out.println("Enter the query to execute");
+                    StringBuilder queryBuilder = new StringBuilder();
+                    while (scanner.hasNextLine()) {
+                        String line = scanner.nextLine();
+                        if (line.isEmpty() || line.isBlank()) {
+                            break; // Exit the loop if an empty line is encountered
+                        }
+                        queryBuilder.append(line).append(" ");
+                    }
+                    String query = queryBuilder.toString().trim();
+                    QueryService queryService = new QueryService(new DataStoreService(), new DataBuilderService(), new DataReaderService());
+                    boolean isQueryExecuted = queryService.execute(loggedInUser, query);
                     break;
                 default:
                     System.out.println("Select a valid option");

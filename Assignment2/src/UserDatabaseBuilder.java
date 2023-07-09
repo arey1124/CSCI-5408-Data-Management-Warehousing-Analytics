@@ -2,6 +2,10 @@ import Services.DataBuilderService;
 import Services.DataReaderService;
 import Services.DataStoreService;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class UserDatabaseBuilder {
 
     private DataStoreService dataStoreService;
@@ -24,6 +28,16 @@ public class UserDatabaseBuilder {
         String database = dataReaderService.extractValue(userData, DATABASE_IDENTIFIER);
         if(database == null) {
             dataStoreService.appendDatabaseData(FILE_PATH, userName, dataBuilderService.buildDatabaseData(dbName));
+            String folderPath = "src/Database/" + userName + "." + dbName;
+            Path folder = Paths.get(folderPath);
+            try {
+                if (!Files.exists(folder)) {
+                    Files.createDirectories(folder);
+                }
+            } catch (Exception e) {
+                System.out.println("Failed to create the folder: " + e.getMessage());
+                return false;
+            }
             return true;
         }
         return false;

@@ -1,0 +1,12 @@
+@@table@@
+	@@Customers@@
+		@@fields@@
+			@@customer_name[VARCHAR(100]@@
+			@@customer_id[INT]@@
+		@@fields@@
+		@@keys@@
+			@@customer_id[PRIMARY KEY]@@
+		@@keys@@
+	@@Customers@@
+@@table@@
+

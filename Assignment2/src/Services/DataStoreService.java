@@ -1,8 +1,12 @@
 package Services;
 
 import java.io.*;
+import java.util.List;
+import java.util.Map;
 
 public class DataStoreService {
+    private static final String DELIMITER = "@@";
+
     public void saveDataToFile(String filePath, String data) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filePath, true))) {
             writer.println(data);
@@ -56,5 +60,19 @@ public class DataStoreService {
         }
 
         return indentation.toString();
+    }
+
+    public void addTableHeadersTofile(File file, Map<String,String> fields) throws IOException {
+        FileWriter fileWriter = new FileWriter(file);
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        bufferedWriter.write(String.join("@@", fields.keySet()));
+        bufferedWriter.close();
+    }
+
+    public void addDataToTable(File file, List<String> data) throws IOException {
+        FileWriter fileWriter = new FileWriter(file, true);
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        bufferedWriter.write("\n" + String.join("@@", data));
+        bufferedWriter.close();
     }
 }
