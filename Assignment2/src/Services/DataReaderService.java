@@ -3,11 +3,23 @@ package Services;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class DataReaderService {
+
+    private DBHelper dbHelper;
+    private static final String DB_IDENTIFIER = "@@database@@";
+    private static final String AUTH_FILE_PATH = "src/Database/user_credentials.txt";
+    private static final String DB_SRC_PATH = "src/Database/";
+    public DataReaderService() {
+        this.dbHelper = new DBHelper();
+    }
+
     public String getUserData(String filePath, String identifier) {
         StringBuilder userData = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
@@ -94,6 +106,22 @@ public class DataReaderService {
                 filteredRows.add(0, selectedColumnNames);
                 return filteredRows;
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getTableDesc (String userName) {
+        String userData = this.getUserData(AUTH_FILE_PATH, userName);
+        String database = this.extractValue(userData, DB_IDENTIFIER);
+
+        String filePath = DB_SRC_PATH + dbHelper.getDBPath(userName, database) + "/table_desc.txt";
+        System.out.println(filePath);
+        try {
+            Path path = Paths.get(filePath);
+            byte[] bytes = Files.readAllBytes(path);
+            return new String(bytes);
         } catch (IOException e) {
             e.printStackTrace();
         }

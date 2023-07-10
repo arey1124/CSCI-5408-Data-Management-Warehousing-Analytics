@@ -1,8 +1,5 @@
 import Model.User;
-import Services.DataBuilderService;
-import Services.DataReaderService;
-import Services.DataStoreService;
-import Services.QueryService;
+import Services.*;
 
 import java.util.Scanner;
 
@@ -68,7 +65,8 @@ public class Main {
             System.out.println("Select the operation:");
             System.out.println("1. Create a Database");
             System.out.println("2. Execute Query");
-            System.out.println("3. Logout & Exit");
+            System.out.println("3. Generate ER Diagram");
+            System.out.println("4. Logout & Exit");
             String option = scanner.nextLine();
             switch (option) {
                 case "1":
@@ -94,6 +92,10 @@ public class Main {
                     String query = queryBuilder.toString().trim();
                     QueryService queryService = new QueryService(new DataStoreService(), new DataBuilderService(), new DataReaderService());
                     boolean isQueryExecuted = queryService.execute(loggedInUser, query);
+                    break;
+                case "3":
+                    ERDiagramGenerator erDiagramGenerator = new ERDiagramGenerator();
+                    erDiagramGenerator.generateERDiagram(new DataReaderService().getTableDesc(loggedInUser));
                     break;
                 default:
                     System.out.println("Select a valid option");

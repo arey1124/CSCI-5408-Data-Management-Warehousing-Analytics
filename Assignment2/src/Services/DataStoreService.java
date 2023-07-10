@@ -81,7 +81,7 @@ public class DataStoreService {
     public void updateTableData(File file, String colToUpdate,
                                 String updatedValue, String conditionCol, String conditionValue) {
         try {
-            List<String> columns = new ArrayList<>();
+            List<String> columns;
             // Read the data from the file
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String header = reader.readLine(); // Skip the header line
@@ -115,6 +115,47 @@ public class DataStoreService {
                 writer.close();
 
                 System.out.println("Update successful.");
+            } else {
+                System.out.println("No record found with the specified condition.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeTableData (File file, String columnName, String columnValue){
+        try {
+            List<String> columns;
+            // Read the data from the file
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String header = reader.readLine(); // Skip the header line
+            columns = Arrays.asList(header.split("@@"));
+
+            String line;
+            StringBuilder updatedData = new StringBuilder();
+            boolean recordDeleted = false;
+
+            // Process each line in the file
+            while ((line = reader.readLine()) != null) {
+                String[] values = line.split("@@");
+                String valOfConditionalCol = values[columns.indexOf(columnName)];
+                if (valOfConditionalCol.equals(columnValue)) {
+                    recordDeleted = true;
+                } else {
+                    // Append the updated line to the StringBuilder
+                    updatedData.append(String.join("@@", values)).append("\n");
+                }
+            }
+            reader.close();
+
+            if (recordDeleted) {
+                // Write the updated data back to the file
+                BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                writer.write(header + "\n"); // Write the header line
+                writer.write(updatedData.toString()); // Write the updated data lines
+                writer.close();
+
+                System.out.println("Delete successful.");
             } else {
                 System.out.println("No record found with the specified condition.");
             }
