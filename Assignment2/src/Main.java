@@ -14,6 +14,7 @@ public class Main {
         User user;
         UserAuthentication auth = new UserAuthentication(new DataStoreService(), new DataBuilderService(), new DataReaderService());
         UserDatabaseBuilder databaseBuilder = new UserDatabaseBuilder(new DataStoreService(), new DataBuilderService(), new DataReaderService());
+        QueryService queryService = new QueryService(new DataStoreService(), new DataBuilderService(), new DataReaderService());
 
         while (true && !isUserLoggedIn) {
             System.out.println("Select the operation:");
@@ -66,7 +67,8 @@ public class Main {
             System.out.println("1. Create a Database");
             System.out.println("2. Execute Query");
             System.out.println("3. Generate ER Diagram");
-            System.out.println("4. Logout & Exit");
+            System.out.println("4. Transaction");
+            System.out.println("5. Logout & Exit");
             String option = scanner.nextLine();
             switch (option) {
                 case "1":
@@ -90,12 +92,26 @@ public class Main {
                         queryBuilder.append(line).append(" ");
                     }
                     String query = queryBuilder.toString().trim();
-                    QueryService queryService = new QueryService(new DataStoreService(), new DataBuilderService(), new DataReaderService());
                     boolean isQueryExecuted = queryService.execute(loggedInUser, query);
                     break;
                 case "3":
                     ERDiagramGenerator erDiagramGenerator = new ERDiagramGenerator();
                     erDiagramGenerator.generateERDiagram(new DataReaderService().getTableDesc(loggedInUser));
+                    break;
+                case "4":
+                    StringBuilder transactionBuilder = new StringBuilder();
+                    while (scanner.hasNextLine()) {
+                        String line = scanner.nextLine();
+                        if (line.isEmpty() || line.isBlank()) {
+                            break; // Exit the loop if an empty line is encountered
+                        }
+                        transactionBuilder.append(line).append(" ");
+                    }
+                    String transactionQuery = transactionBuilder.toString().trim();
+                    TransactionService transactionService = new TransactionService(queryService);
+                    transactionService.executeTransaction(loggedInUser, transactionQuery);
+                    break;
+                case "5":
                     break;
                 default:
                     System.out.println("Select a valid option");

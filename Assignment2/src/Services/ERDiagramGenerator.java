@@ -9,6 +9,10 @@ import java.util.regex.Pattern;
 
 public class ERDiagramGenerator {
 
+    /**
+     * Generate ER Diagram based on the data provided for the tables
+     * @param data
+     */
     public static void generateERDiagram(String data) {
         String[] tables = data.split("@@table@@");
 
@@ -78,9 +82,6 @@ public class ERDiagramGenerator {
         }
         erDiagram.append("\n");
 
-        boolean hasRelationships = false;
-
-
         int maxFields = getMaxValue(relationships);
         for (int i=0; i <= maxFields; i++) {
             for (String table : relationships.keySet()) {
@@ -89,13 +90,13 @@ public class ERDiagramGenerator {
                 if (fields.size() > i) {
                     if (keyData.containsKey(fields.get(i)) && keyData.get(fields.get(i)).contains("FOREIGN KEY")) {
                         erDiagram.append("| ").append(String.format("%-20s",fields.get(i))).append(" |\t").append(" ---->  ");
-                        hasRelationships = true;
                     } else {
                         erDiagram.append("| ").append(String.format("%-20s",fields.get(i))).append(" |\t\t\t");
                     }
                 } else {
                     erDiagram.append("+----------------------+\t\t\t");
                     relationships.remove(table);
+                    break;
                 }
             }
             erDiagram.append("\n");
