@@ -20,6 +20,12 @@ public class TransactionService {
         this.queries = new ArrayList<>();
     }
 
+    /**
+     * Execute the transaction for a user based on the query
+     * @param userName
+     * @param query
+     * @return
+     */
     public boolean executeTransaction (String userName, String query) {
         if(!query.toUpperCase().contains("BEGIN TRANSACTION")) {
             return false;

@@ -9,6 +9,11 @@ import java.util.Map;
 public class DataStoreService {
     private static final String DELIMITER = "@@";
 
+    /**
+     * Save the provided data to the file path specified
+     * @param filePath
+     * @param data
+     */
     public void saveDataToFile(String filePath, String data) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filePath, true))) {
             writer.println(data);
@@ -17,6 +22,12 @@ public class DataStoreService {
         }
     }
 
+    /**
+     * Add database data for a user to the file
+     * @param filePath
+     * @param identifier is the username for the user
+     * @param dataToAppend
+     */
     public static void appendDatabaseData(String filePath, String identifier, String dataToAppend) {
         File originalFile = new File(filePath);
         File tempFile = new File("temp.txt");
@@ -52,6 +63,11 @@ public class DataStoreService {
         }
     }
 
+    /**
+     * Helper method for the function appendDatabaseData
+     * @param line
+     * @return
+     */
     private static String getIndentation(String line) {
         StringBuilder indentation = new StringBuilder();
         int index = 0;
@@ -64,6 +80,12 @@ public class DataStoreService {
         return indentation.toString();
     }
 
+    /**
+     * Add the fields as table headers to the specified file
+     * @param file
+     * @param fields
+     * @throws IOException
+     */
     public void addTableHeadersTofile(File file, Map<String,String> fields) throws IOException {
         FileWriter fileWriter = new FileWriter(file);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
@@ -71,6 +93,12 @@ public class DataStoreService {
         bufferedWriter.close();
     }
 
+    /**
+     * Insert table data and store it in the specified file
+     * @param file
+     * @param data
+     * @throws IOException
+     */
     public void addDataToTable(File file, List<String> data) throws IOException {
         FileWriter fileWriter = new FileWriter(file, true);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
@@ -78,6 +106,14 @@ public class DataStoreService {
         bufferedWriter.close();
     }
 
+    /**
+     * Modify table data based on the conditions provided for column and value
+     * @param file
+     * @param colToUpdate
+     * @param updatedValue
+     * @param conditionCol
+     * @param conditionValue
+     */
     public void updateTableData(File file, String colToUpdate,
                                 String updatedValue, String conditionCol, String conditionValue) {
         try {
@@ -123,6 +159,12 @@ public class DataStoreService {
         }
     }
 
+    /**
+     * Remove data from table (file) based on the column condition and value
+     * @param file
+     * @param columnName
+     * @param columnValue
+     */
     public void removeTableData (File file, String columnName, String columnValue){
         try {
             List<String> columns;

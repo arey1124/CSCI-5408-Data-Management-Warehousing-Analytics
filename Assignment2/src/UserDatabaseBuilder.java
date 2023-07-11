@@ -20,6 +20,12 @@ public class UserDatabaseBuilder {
         this.dataReaderService = dataReaderService;
     }
 
+    /**
+     * Handle create database operation for a user
+     * @param userName
+     * @param dbName
+     * @return
+     */
     public boolean createDatabase (String userName, String dbName) {
         if(userName == null || dbName == null) {
             return false;

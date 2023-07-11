@@ -28,6 +28,12 @@ public class QueryService {
         this.dbHelper = new DBHelper();
     }
 
+    /**
+     * Query executor, takes care of the query type and performs the desired operation
+     * @param userName
+     * @param query
+     * @return
+     */
     public boolean execute(String userName, String query) {
         String userData = dataReaderService.getUserData(AUTH_FILE_PATH, userName);
         String database = dataReaderService.extractValue(userData, DB_IDENTIFIER);
@@ -50,6 +56,12 @@ public class QueryService {
         return false;
     }
 
+    /**
+     * Handles and executes the CREATE query
+     * @param dbPath
+     * @param query
+     * @return
+     */
     private boolean executeCreate(String dbPath, String query) {
         String tableName = dbHelper.parseTableName(query);
         try {
@@ -68,6 +80,12 @@ public class QueryService {
         return true;
     }
 
+    /**
+     * Handles and executes the SELECT query
+     * @param dbPath
+     * @param query
+     * @return
+     */
     private boolean executeSelect(String dbPath, String query) {
         String tableName = dbHelper.parseTableName(query);
         if(tableName == null || tableName.isEmpty()) {
@@ -80,6 +98,12 @@ public class QueryService {
         return false;
     }
 
+    /**
+     * Handles and executes the INSERT query
+     * @param dbPath
+     * @param query
+     * @return
+     */
     private boolean executeInsert(String dbPath, String query) {
         String tableName = dbHelper.parseTableName(query);
         File file = new File(dbPath + "/" + tableName + ".txt");
@@ -96,6 +120,12 @@ public class QueryService {
         return false;
     }
 
+    /**
+     * Handles and executes the UPDATE query
+     * @param dbPath
+     * @param query
+     * @return
+     */
     private boolean executeUpdate(String dbPath, String query) {
         String tableName = dbHelper.parseTableName(query);
         File file = new File(dbPath + "/" + tableName + ".txt");
@@ -124,6 +154,12 @@ public class QueryService {
         return true;
     }
 
+    /**
+     * Handles and executes the DELETE query
+     * @param dbPath
+     * @param query
+     * @return
+     */
     private boolean executeDelete(String dbPath, String query) {
 
         // Match the delete query using regular expressions

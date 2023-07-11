@@ -22,6 +22,12 @@ public class UserAuthentication {
         this.dataReaderService = dataReaderService;
     }
 
+    /**
+     * Create a user or Register user
+     * Takes input as user object
+     * @param user
+     * @return true or false if success or failed
+     */
     public boolean registerUser (User user) {
         if(dataReaderService.getUserData(FILE_PATH, user.getUsername()) == null) {
             String hashedPassword = hashPassword(user.getPassword());
@@ -31,6 +37,13 @@ public class UserAuthentication {
         return false;
     }
 
+    /**
+     * Authenticate the user using username and password
+     * Handle the security question check
+     * @param userName
+     * @param password
+     * @return
+     */
     public boolean authenticateUser (String userName, String password) {
         String userData = dataReaderService.getUserData(FILE_PATH, userName);
         if(userData != null && !userData.isEmpty()) {
@@ -47,6 +60,11 @@ public class UserAuthentication {
         return false;
     }
 
+    /**
+     * Hash password to be stored using MD5 hash
+     * @param password
+     * @return
+     */
     private String hashPassword(String password) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");

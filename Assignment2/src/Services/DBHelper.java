@@ -13,6 +13,12 @@ public class DBHelper {
     public static final String INSERT_PATTERN = "INSERT INTO";
     public static final String UPDATE_PATTERN = "UPDATE";
     public static final String DELETE_PATTERN = "DELETE FROM";
+
+    /**
+     * Fetch table name from the provided query
+     * @param query
+     * @return
+     */
     public static String parseTableName(String query) {
         String tableName = null;
 
@@ -32,6 +38,11 @@ public class DBHelper {
         return tableName;
     }
 
+    /**
+     * Helper function for parseTableName to extract table name from select query
+     * @param query
+     * @return
+     */
     public static String extractTableNameFromSelect(String query) {
         String tableName = null;
         Pattern pattern = Pattern.compile("FROM\\s+(\\w+)");
@@ -42,6 +53,11 @@ public class DBHelper {
         return tableName;
     }
 
+    /**
+     * Extract table name from the given query
+     * @param query
+     * @return
+     */
     public static String extractTableName(String query) {
         String tableName = null;
         if (query.contains(" ")) {
@@ -52,6 +68,11 @@ public class DBHelper {
         return tableName;
     }
 
+    /**
+     * Extract fields from the provided query for create statement
+     * @param createQuery
+     * @return
+     */
     public static Map<String, String> extractFields(String createQuery) {
         Map<String, String> fields = new LinkedHashMap<>();
 
@@ -76,6 +97,11 @@ public class DBHelper {
         return fields;
     }
 
+    /**
+     * Extract the table data (values) to be inserted from the insert query string
+     * @param insertQuery
+     * @return
+     */
     public static List<String> extractTableValues(String insertQuery) {
         List<String> values = new ArrayList<>();
         Pattern pattern = Pattern.compile("(?<=VALUES\\s*\\().*?(?=\\))");
@@ -90,6 +116,11 @@ public class DBHelper {
         return values;
     }
 
+    /**
+     * Find the key relationships for tables from the create query
+     * @param createQuery
+     * @return
+     */
     public static Map<String, String> extractFieldKeyMapping(String createQuery) {
         Map<String, String> fieldKeyMap = new LinkedHashMap<>();
 
@@ -123,6 +154,11 @@ public class DBHelper {
         return fieldKeyMap;
     }
 
+    /**
+     * Helper function for extractFieldKeyMapping to get the key type
+     * @param fieldParts
+     * @return
+     */
     public static String getKeyType(String[] fieldParts) {
         String keyType = "";
 
@@ -137,6 +173,12 @@ public class DBHelper {
         return keyType;
     }
 
+    /**
+     * Get the database path for a user
+     * @param userName
+     * @param database
+     * @return
+     */
     public String getDBPath (String userName, String database) {
         if(database != null) {
             return userName + "." + database;
@@ -144,6 +186,10 @@ public class DBHelper {
         return null;
     }
 
+    /**
+     * Print the table data in console
+     * @param data
+     */
     public static void printTable(List<List<String>> data) {
         if (data.isEmpty()) {
             System.out.println("No data available.");
@@ -181,6 +227,10 @@ public class DBHelper {
         printBorder(columnWidths);
     }
 
+    /**
+     * Print table borders
+     * @param columnWidths
+     */
     public static void printBorder(int[] columnWidths) {
         System.out.print("┌");
         for (int width : columnWidths) {
@@ -190,6 +240,11 @@ public class DBHelper {
         System.out.println();
     }
 
+    /**
+     * Print table rows based on rows and width provided
+     * @param row
+     * @param columnWidths
+     */
     public static void printRow(List<String> row, int[] columnWidths) {
         System.out.print("│");
         for (int i = 0; i < row.size(); i++) {
@@ -201,6 +256,10 @@ public class DBHelper {
         System.out.println();
     }
 
+    /**
+     * Print column separator based on column width
+     * @param columnWidths
+     */
     public static void printSeparator(int[] columnWidths) {
         System.out.print("├");
         for (int width : columnWidths) {
@@ -210,6 +269,12 @@ public class DBHelper {
         System.out.println();
     }
 
+    /**
+     * Helper function to duplicate the provided character based on the count
+     * @param c
+     * @param count
+     * @return
+     */
     public static String repeatChar(char c, int count) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < count; i++) {
@@ -218,6 +283,12 @@ public class DBHelper {
         return sb.toString();
     }
 
+    /**
+     * Helper function to identify string padding based on the length provided
+     * @param str
+     * @param length
+     * @return
+     */
     public static String padString(String str, int length) {
         return String.format("%-" + length + "s", str);
     }

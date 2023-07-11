@@ -20,6 +20,12 @@ public class DataReaderService {
         this.dbHelper = new DBHelper();
     }
 
+    /**
+     * Gets the user data from the user_credentials based on the identifier
+     * @param filePath
+     * @param identifier is the current logged-in username
+     * @return
+     */
     public String getUserData(String filePath, String identifier) {
         StringBuilder userData = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
@@ -50,6 +56,12 @@ public class DataReaderService {
         return userData.toString();
     }
 
+    /**
+     * Parse the data and extract identifier value based on the identifier from the provided data
+     * @param data
+     * @param identifier
+     * @return
+     */
     public String extractValue(String data, String identifier) {
         int startIndex = data.indexOf(identifier) + identifier.length();
         int endIndex = data.indexOf(identifier, startIndex);
@@ -61,6 +73,13 @@ public class DataReaderService {
         }
     }
 
+    /**
+     * Read table records based on the query provided
+     * @param dbPath is the database file path where the data is stored
+     * @param tableName
+     * @param query
+     * @return
+     */
     public List<List<String>> getTableRecordsFromQuery (String dbPath, String tableName, String query) {
         try {
             List<String> columns = new ArrayList<>();
@@ -112,6 +131,11 @@ public class DataReaderService {
         return null;
     }
 
+    /**
+     * Returns the current logged-in user's tables definitions
+     * @param userName
+     * @return
+     */
     public String getTableDesc (String userName) {
         String userData = this.getUserData(AUTH_FILE_PATH, userName);
         String database = this.extractValue(userData, DB_IDENTIFIER);

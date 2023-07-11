@@ -5,6 +5,15 @@ import java.util.Map;
 
 public class DataBuilderService {
     private static final String DELIMITER = "@@";
+
+    /**
+     * Creates a user based on the data provided for authentication
+     * @param username
+     * @param password
+     * @param question
+     * @param answer
+     * @return
+     */
     public String buildUserData(String username, String password, String question, String answer) {
         StringBuilder authPartBuilder = new StringBuilder();
         authPartBuilder.append(DELIMITER).append(username).append(DELIMITER).append(System.lineSeparator())
@@ -18,6 +27,11 @@ public class DataBuilderService {
         return authPartBuilder.toString();
     }
 
+    /**
+     * Create a database for a user based on the name provided
+     * @param dbName database name
+     * @return
+     */
     public String buildDatabaseData(String dbName) {
         StringBuilder dbBuilder = new StringBuilder();
         dbBuilder
@@ -25,6 +39,13 @@ public class DataBuilderService {
         return dbBuilder.toString();
     }
 
+    /**
+     * Creates table structure based on the field names, keys and the table name
+     * @param tableName
+     * @param fields
+     * @param keys
+     * @return
+     */
     public String buildTableData(String tableName, Map<String, String> fields, Map<String, String> keys) {
         StringBuilder tableBuilder = new StringBuilder();
         tableBuilder.append(DELIMITER).append("table").append(DELIMITER).append(System.lineSeparator());

@@ -105,6 +105,11 @@ public class ERDiagramGenerator {
         System.out.println(erDiagram.toString());
     }
 
+    /**
+     * Get max number of field value
+     * @param relationships
+     * @return
+     */
     public static int getMaxValue (Map<String, List<String>> relationships) {
         int maxValue = Integer.MIN_VALUE;
 
