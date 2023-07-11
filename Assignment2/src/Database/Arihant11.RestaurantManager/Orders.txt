@@ -1,0 +1,2 @@
+order_id@@customer_id@@order_date
+1@@1@@'2023-01-02'

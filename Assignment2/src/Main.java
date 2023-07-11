@@ -48,12 +48,13 @@ public class Main {
                     answer = scanner.nextLine();
                     user = new User(username, password, question, answer);
                     if(auth.registerUser(user)) {
-                        System.out.println("Model.User registered successfully.");
+                        System.out.println("User registered successfully.");
                     } else {
-                        System.out.println("Model.User with username already exists");
+                        System.out.println("User with username already exists");
                     }
                     break;
                 case "3":
+                    System.exit(0);
                     System.out.println("Exiting the program...");
                     break;
                 default:
@@ -112,6 +113,8 @@ public class Main {
                     transactionService.executeTransaction(loggedInUser, transactionQuery);
                     break;
                 case "5":
+                    System.exit(0);
+                    System.out.println("Exiting the program...");
                     break;
                 default:
                     System.out.println("Select a valid option");

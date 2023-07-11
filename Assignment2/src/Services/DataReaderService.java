@@ -141,7 +141,6 @@ public class DataReaderService {
         String database = this.extractValue(userData, DB_IDENTIFIER);
 
         String filePath = DB_SRC_PATH + dbHelper.getDBPath(userName, database) + "/table_desc.txt";
-        System.out.println(filePath);
         try {
             Path path = Paths.get(filePath);
             byte[] bytes = Files.readAllBytes(path);

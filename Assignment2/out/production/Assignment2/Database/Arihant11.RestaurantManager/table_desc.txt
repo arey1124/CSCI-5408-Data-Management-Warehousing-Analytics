@@ -1,0 +1,26 @@
+@@table@@
+	@@Customers@@
+		@@fields@@
+			@@customer_id[INT]@@
+			@@customer_name[VARCHAR(100)]@@
+		@@fields@@
+		@@keys@@
+			@@customer_id[PRIMARY KEY]@@
+		@@keys@@
+	@@Customers@@
+@@table@@
+
+@@table@@
+	@@Orders@@
+		@@fields@@
+			@@order_id[INT]@@
+			@@customer_id[INT]@@
+			@@order_date[DATE]@@
+		@@fields@@
+		@@keys@@
+			@@order_id[PRIMARY KEY]@@
+			@@customer_id[FOREIGN KEY Customers(customer_id)]@@
+		@@keys@@
+	@@Orders@@
+@@table@@
+
