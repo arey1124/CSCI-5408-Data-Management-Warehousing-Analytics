@@ -1,0 +1,6 @@
+Main.class
+WordCounter$IntSumReducer.class
+WordCounter.class
+ReutRead.class
+MongoDBConnectionUtil.class
+WordCounter$TokenizerMapper.class
